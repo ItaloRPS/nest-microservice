@@ -1,37 +1,61 @@
 import { Injectable } from '@nestjs/common';
+import { NotFoundError } from 'src/common/errors/types/NotFoundError';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { CategoryEntity } from '../entities/category.entity';
 
 
 @Injectable()
 export class CategoriesRepository {
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return this.prismaService.category.create({
+  create(createCategoryDto: CreateCategoryDto):Promise<CategoryEntity> {
+    return this.prisma.category.create({
         data:createCategoryDto
     });
   }
 
- async findAll() {
-     return await this.prismaService.category.findMany({
+ async findAll():Promise<CategoryEntity[]> {
+     return await this.prisma.category.findMany({
         orderBy:{
             createdAt:'desc'
         }
      });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number):Promise<CategoryEntity>{
+    return await this.prisma.category.findUnique({
+      where:{
+        id
+      }
+   });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+ async update(id: number, updateCategoryDto: UpdateCategoryDto):Promise<CategoryEntity> {
+       const category = await this.prisma.category.findUnique({
+      where:{
+        id
+      }
+    })
+    if(!category){
+      throw new NotFoundError('category not found');
+    }
+
+    return await this.prisma.category.update({
+      where: {
+          id,
+      },
+      data:updateCategoryDto,
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    return await this.prisma.category.delete({
+      where: {
+          id,
+      },
+    })
   }
 }

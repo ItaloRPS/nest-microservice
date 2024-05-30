@@ -13,4 +13,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: nest
+    volumes:
+      - db_data:/var/lib/mysql
     
