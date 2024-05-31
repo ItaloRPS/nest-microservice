@@ -1,12 +1,7 @@
-import { Category } from "@prisma/client";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsString } from "class-validator";
 
-export class CreateCategoryDto implements Category  {
-    id: number;
+export class CreateCategoryDto {
 
-    @IsString({ message: 'the name must be a string.' })
-    @IsNotEmpty({ message: 'the name must not be a null.' })
+    @IsString()
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
 }

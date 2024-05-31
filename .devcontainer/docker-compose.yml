@@ -1,3 +1,5 @@
+version: ''
+
 services:
   app:
     build: .
@@ -13,6 +15,4 @@ services:
       MYSQL_DATABASE: nest
     volumes:
       - db_data:/var/lib/mysql
-
-volumes:
-  db_data:
+    

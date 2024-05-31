@@ -7,18 +7,18 @@ import { CategoryEntity } from '../entities/category.entity';
 
 
 @Injectable()
-export class CategoriesRepository {
+export class CategoryRepository {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createCategoryDto: CreateCategoryDto):Promise<CategoryEntity> {
-    return this.prisma.category.create({
-        data:createCategoryDto
+   create(category: CreateCategoryDto) {
+     return this.prisma.category.create({
+        data:category
     });
   }
 
  async findAll():Promise<CategoryEntity[]> {
-     return await this.prisma.category.findMany({
+     return await this.prisma.product.findMany({
         orderBy:{
             createdAt:'desc'
         }
@@ -26,33 +26,33 @@ export class CategoriesRepository {
   }
 
   async findOne(id: number):Promise<CategoryEntity>{
-    return await this.prisma.category.findUnique({
+    return await this.prisma.product.findUnique({
       where:{
         id
       }
    });
   }
 
- async update(id: number, updateCategoryDto: UpdateCategoryDto):Promise<CategoryEntity> {
-       const category = await this.prisma.category.findUnique({
+ async update(id: number, updateProductDto: UpdateCategoryDto):Promise<CategoryEntity> {
+       const product = await this.prisma.product.findUnique({
       where:{
         id
       }
     })
-    if(!category){
+    if(!product){
       throw new NotFoundError('category not found');
     }
 
-    return await this.prisma.category.update({
+    return await this.prisma.product.update({
       where: {
           id,
       },
-      data:updateCategoryDto,
+      data:updateProductDto,
     })
   }
 
   async remove(id: number) {
-    return await this.prisma.category.delete({
+    return await this.prisma.product.delete({
       where: {
           id,
       },
