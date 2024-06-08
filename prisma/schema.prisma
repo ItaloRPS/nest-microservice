@@ -13,12 +13,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  profileId Int
+  hash      String     @default(dbgenerated("uuid()"))
+  profile   Profile    @relation(fields: [profileId], references: [id])
+  purchase  Purchase[]
+  address Address[]
+
+  @@map("user")
+}
+
+model Profile {
+  id       Int       @id @default(autoincrement())
+  name     String
+  users User[]
+
+  @@map("profile")
+}
+
 model Category{
   id Int @default(autoincrement()) @unique
   name String 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Product[] 
+
   @@map("category")
 }
 
@@ -28,10 +52,61 @@ model Product{
   price Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
   categoryId Int
   category Category @relation(fields:[categoryId], references:[id])
+  cartItems CartItems[]
 
   @@map("product")
 }
 
+model CartItems {
+  id         Int       @id @default(autoincrement())
+  purchaseId Int
+  productId  Int
+  valor      Float
+  amount     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product Product @relation(fields: [productId],references: [id])
+  purchase Purchase @relation(fields: [purchaseId],references: [id])
+  @@map("cartItems")
+}
+
+
+model Purchase {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  deliveryAddressId Int
+  paymentTypeId     Int
+  datePurchase DateTime  @default(now())
+  total      Float
+  user       User   @relation(fields: [userId], references: [id])
+  paymentType   PaymentType   @relation(fields: [paymentTypeId], references: [id])
+  deliveryAddress  Address    @relation(fields: [deliveryAddressId], references: [id])
+  cartItems CartItems[]
+  @@map("purchase")
+}
+
+
+model PaymentType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  purchase   Purchase[]
+
+  @@map("paymentType")
+}
+
+model Address {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  type        String
+  logradouro  String
+  number      String
+  city        String
+  state       String
+  zipcode     String
+  user        User  @relation(fields: [userId], references: [id])
+  purchases   Purchase[]
+
+  @@map("address")
+}
