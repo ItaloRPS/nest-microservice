@@ -15,6 +15,15 @@ export class UserService {
     return await this.User.create(createUserDto)
   }
 
+  async findOrCreateUser(createUserDto: CreateUserDto):Promise<any> {
+    const {email} = createUserDto
+    const user = await this.findOneByEmail(email)
+    if (!user) {
+      return await this.User.create(createUserDto)
+    }
+    return user;
+  }
+
   async findAll():Promise<UserEnity[]> {
     return await this.User.findAll()
   }
@@ -23,7 +32,11 @@ export class UserService {
     return await this.User.findOne(id)
   }
 
-  async findOneByEmail(email: string):Promise<UserEnity> {
+  async findGegister(email: string):Promise<UserEnity> {
+    return await this.User.findGegister(email)
+  }
+
+  async findOneByEmail(email: string):Promise<Object> {
     return await this.User.findOneByEmail(email)
   }
 

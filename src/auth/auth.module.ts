@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
+import { GoogleStrategy } from './strategy/google.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -19,7 +20,7 @@ import { LoginValidationMiddleware } from './middlewares/login-validation.middle
         signOptions: { expiresIn: '60m' },
       }),],
   providers: [
-    AuthService, LocalStrategy, JwtStrategy],
+    AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

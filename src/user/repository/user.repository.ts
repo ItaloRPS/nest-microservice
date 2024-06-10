@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -19,6 +18,20 @@ export class UserRepository {
     })
   }
 
+ async findOneByEmail(email: string):Promise<Object> {
+    return await this.prisma.user.findUnique({
+        where:{
+          email
+        },
+       select:{
+        id:true,
+        email:true,
+        name:true,
+        profileId:true
+       } 
+    });
+  }
+
   async findAll():Promise<UserEnity[]> {
     return await this.prisma.user.findMany();
   }
@@ -31,7 +44,7 @@ export class UserRepository {
     });
   }
 
-  async findOneByEmail(email: string):Promise<UserEnity> {
+  async findGegister(email: string):Promise<UserEnity> {
     return await this.prisma.user.findUnique({
         where:{
             email
