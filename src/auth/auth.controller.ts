@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
   Res,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -17,9 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller("auth")
 export class AuthController {
-  constructor(
-        private readonly authService: AuthService
-        ) {}
+  constructor( private readonly authService: AuthService ) {}
 
   @IsPublic ()
   @UseGuards(LocalAuthGuard)
@@ -36,12 +35,12 @@ export class AuthController {
   async loginGoogle(@Request() req: AuthRequest) {}
 
   @IsPublic ()
-  @UseGuards(AuthGuard('google'))
-  @Get('google/callback')
+  @Get('google/login')
   @HttpCode(HttpStatus.OK)
-  async callback(@Req() req, @Res() res) {
-    const jwt = await this.authService.login(req.user)
-    res.set('authorization', jwt.access_token)
-    return res.json(req.use)
+  async callback(@Req() req, @Res() res, @Query('access_token') access_token) {
+    const user = await this.authService.validateGoogleToken(access_token)
+    const jwt = await this.authService.login(user)
+    return res.json(jwt)
   }
+
 }

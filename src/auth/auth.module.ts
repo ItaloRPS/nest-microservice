@@ -20,7 +20,11 @@ import { GoogleStrategy } from './strategy/google.strategy';
         signOptions: { expiresIn: '60m' },
       }),],
   providers: [
-    AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+    AuthService,
+    LocalStrategy,
+    JwtStrategy, 
+    GoogleStrategy, 
+  ],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
