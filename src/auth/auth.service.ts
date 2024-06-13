@@ -40,20 +40,19 @@ export class AuthService {
     const url = `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`;
 
     try {
-      const response = await axios.get(url);
-      const {data:{name,email}} = response
-     if(response && response.data){
-      const googleData = {
-        name:name as string,
-        email:email as string,
-        password:'',
-        profileId:1
-       }
-       return this.usersService.findOrCreateUser(googleData)
-     }
-     new UnauthorizedException('Invalid Google token');
+        const response = await axios.get(url);
+        const {data:{name,email}} = response
+      if(response && response.data){
+        const googleData = {
+          name:name as string,
+          email:email as string,
+          password:'',
+          profileId:1
+        }
+        return this.usersService.findOrCreateUser(googleData)
+      }
     } catch (error) {
-      throw new UnauthorizedException('Invalid Google token');
+      return;
     }
   }
 }
