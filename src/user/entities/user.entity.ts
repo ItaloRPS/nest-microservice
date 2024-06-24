@@ -7,4 +7,6 @@ export class UserEnity implements User {
     email: string;
     password: string;
     profileId: number;
+    companyId: number;
+
 }

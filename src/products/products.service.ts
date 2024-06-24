@@ -14,6 +14,12 @@ export class ProductsService {
   async findAll() {
     return await this.repository.findAll()
   }
+  async findActives(skip = 0, limit = 0, categoryId?:number) {
+    return await this.repository.findActives(skip, limit, categoryId )
+  }
+  async findRecommended() {
+    return await this.repository.findRecommended()
+  }
 
   async findOne(id: number) {
       return await this.repository.findOne(id)

@@ -18,6 +18,11 @@ export class CreateUserDto{
     @IsNumber()
     profileId: number;
 
+    @IsNotEmpty()
+    @IsNumber()
+    companyId: number;
+
+
 }
 
 

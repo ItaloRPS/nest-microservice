@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -12,6 +13,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
+  @IsPublic()
   @Get()
   findAll() {
     return this.categoriesService.findAll();

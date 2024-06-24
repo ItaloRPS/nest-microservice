@@ -4,4 +4,7 @@ export class CreateCategoryDto {
 
     @IsString()
     name: string;
+    
+    @IsString()
+    status: string;
 }

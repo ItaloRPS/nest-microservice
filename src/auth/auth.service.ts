@@ -47,7 +47,8 @@ export class AuthService {
           name:name as string,
           email:email as string,
           password:'',
-          profileId:1
+          profileId:1,
+          companyId:1
         }
         return this.usersService.findOrCreateUser(googleData)
       }

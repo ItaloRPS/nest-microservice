@@ -13,8 +13,8 @@ export class ProductsRepository {
 
    create(createProductDto: CreateProductDto):Promise<ProductEntity> {
     return this.prisma.product.create({
-        data:createProductDto
-    });
+      data:createProductDto
+    })
   }
 
  async findAll():Promise<ProductEntity[]> {
@@ -23,6 +23,40 @@ export class ProductsRepository {
             createdAt:'desc'
         }
      });
+  }
+  
+ async findActives(skip = 0, limit =10, categoryId?:number):Promise<ProductEntity[]> {
+    let whereCondition:{status: string, categoryId?: number} = {
+        status: 'A'
+      };
+
+      if (categoryId !== undefined) {
+          whereCondition.categoryId = categoryId;
+      }
+
+     return await this.prisma.product.findMany({
+        skip,
+        take:limit,
+        where:whereCondition,
+        orderBy:{
+            createdAt:'desc'
+        }
+     });
+  }
+
+ async findRecommended():Promise<ProductEntity[]> {
+     return await this.prisma.$queryRaw`
+          SELECT *
+          FROM (
+              SELECT *,
+              ROW_NUMBER() OVER (PARTITION BY categoryId ORDER BY updatedAt DESC) AS row_num
+              FROM product
+              WHERE STATUS = 'A'
+          ) AS numbered_products
+          WHERE row_num <=2
+          ORDER by createdAt
+          LIMIT 10;
+     `;
   }
 
   async findOne(id: number):Promise<ProductEntity>{
